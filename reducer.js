@@ -6,7 +6,7 @@ const init = {
     filters: {
         all: () => true,
         active: todo => !todo.completed,
-        completed: todo => todo.completed,
+        completed: todo => todo.completed,  
     }
 }
 
@@ -23,13 +23,23 @@ const actions = {
         storage.set(todos)
     },
     toggleAll({ todos }, completed) {
-        // const value = completed[0]
-        todos.forEach(todo => todo.completed = completed)
-        storage.set(todos)  
+        const destructuring = completed[0]
+        todos.forEach(todo => todo.completed = destructuring)
+        storage.set(todos)
+    },
+    destroy({ todos }, index) {
+        todos.splice(index, 1)
+        storage.set(todos)
+    },
+    switchFilter(state, filter) {
+        state.filter = filter
     }
 }
 
 export default function reducer(state = init, action, args) {
+    if(Array.isArray(args)) {
+        [args] = args
+    }
     actions[action] && actions[action](state, args)
     return state
 }
